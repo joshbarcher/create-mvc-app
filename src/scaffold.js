@@ -1,33 +1,41 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import fs from "fs/promises";
+import path from "path";
+import { fileURLToPath } from "url";
 import * as helpers from "./helpers.js";
 
-const templateDir = fileURLToPath(new URL("../template", import.meta.url));
+const templateDir = fileURLToPath(
+    new URL("../template", import.meta.url)
+);
 
 export const run = async (projectFolder) => {
-    const destDir =
-        projectFolder === "."
-            ? process.cwd()
-            : path.join(process.cwd(), projectFolder);
+    if (!projectFolder) {
+        throw new Error("Project folder name is required");
+    }
 
-    const exists = await helpers.pathExists(destDir);
+    const destDir = path.join(process.cwd(), projectFolder);
 
-    if (exists) {
-        const entries = await fs.readdir(destDir).catch(() => []);
-        if (entries.length > 0) {
-            throw new Error(
-                `Destination is not empty:\n  ${destDir}`
-            );
-        }
-    } else {
-        await fs.mkdir(destDir, { recursive: true });
+    await fs.mkdir(destDir, { recursive: true });
+
+    const entries = await fs.readdir(destDir);
+    if (entries.length > 0) {
+        throw new Error("Destination folder must be empty");
     }
 
     await helpers.copyDir(templateDir, destDir);
 
-    console.log("\n✔ Project created\n");
-    console.log(`Location:\n  ${destDir}\n`);
+    // --- FIX: rename gitignore → .gitignore ---
+    const gitignoreSrc = path.join(destDir, "gitignore");
+    const gitignoreDest = path.join(destDir, ".gitignore");
+
+    try {
+        await fs.rename(gitignoreSrc, gitignoreDest);
+    } catch {
+        // ignore if not present
+    }
+    // ------------------------------------------
+
+    console.log("\n✔ Project created");
+    console.log(`Location: ${destDir}\n`);
     console.log("Next steps:");
     console.log(`  cd ${projectFolder}`);
     console.log("  npm install");
