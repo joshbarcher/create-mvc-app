@@ -1,0 +1,22 @@
+{
+    "name": "create-mvc-app",
+    "version": "1.0.0",
+    "description": "Tool to scaffold an opinionated MVC project folder",
+    "main": "index.js",
+    "type": "module",
+    "license": "MIT",
+    "private": false,
+    "author": {
+        "name": "Josh Archer",
+        "email": "jarcher@greenriver.edu"
+    },
+    "bin": {
+        "create-mvc-app": "./src/cli.js"
+    },
+    "files": [
+        "src",
+        "template",
+        "README.md",
+        "LICENSE"
+    ]
+}
