@@ -31,10 +31,10 @@ Students should create projects in a **local folder** (Desktop, Documents, or a 
 
 ## Installation
 
-Install the tool globally from GitHub:
+Install the tool globally from the NPM registry:
 
 ```bash
-npm install -g git+https://github.com/your-org/create-mvc-app.git
+npm install -g @archerjb/create-mvc-app
 ```
 
 Once installed, the `create-mvc-app` command will be available globally.

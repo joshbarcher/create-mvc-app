@@ -1,8 +1,9 @@
-import fs from "fs/promises";
-import path from "path";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import * as helpers from "./helpers.js";
 
-const templateDir = new URL("../template", import.meta.url);
+const templateDir = fileURLToPath(new URL("../template", import.meta.url));
 
 export const run = async (projectFolder) => {
     const destDir =
@@ -23,7 +24,7 @@ export const run = async (projectFolder) => {
         await fs.mkdir(destDir, { recursive: true });
     }
 
-    await helpers.copyDir(templateDir.pathname, destDir);
+    await helpers.copyDir(templateDir, destDir);
 
     console.log("\n✔ Project created\n");
     console.log(`Location:\n  ${destDir}\n`);
